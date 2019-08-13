@@ -3,7 +3,7 @@ using RimDev.ApplicationInsights.Filters.Processors;
 using System;
 using Xunit;
 
-namespace RimDev.ApplicationInsights.Filters.Tests
+namespace RimDev.ApplicationInsights.Filters.Tests.Processors
 {
     public class IgnoreHangfireTelemetryTests
     {
