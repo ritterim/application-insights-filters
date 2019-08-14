@@ -2,6 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Description>Filters for Microsoft Application Insights ASP.NET and ASP.NET Core applications.</Description>
+    <Authors>Ritter Insurance Marketing</Authors>
+    <Copyright>Copyright 2019 Ritter Insurance Marketing</Copyright>
+    <Version>1.0.0-preview1</Version>
+    <PackageProjectUrl>https://github.com/ritterim/application-insights-filters</PackageProjectUrl>
+    <PackageTags>rimdev;application;insights;filters;telemetry;itelemetryprocessor</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
