@@ -11,6 +11,10 @@ namespace RimDev.ApplicationInsights.Filters.Processors
         private readonly ITelemetryProcessor next;
         private readonly string[] paths;
 
+        public IgnorePathsTelemetry(ITelemetryProcessor next, IgnorePathsTelemetryOptions options)
+            : this(next, options.Paths)
+        { }
+
         public IgnorePathsTelemetry(ITelemetryProcessor next, params string[] paths)
         {
             this.next = next ?? throw new ArgumentNullException(nameof(next));
