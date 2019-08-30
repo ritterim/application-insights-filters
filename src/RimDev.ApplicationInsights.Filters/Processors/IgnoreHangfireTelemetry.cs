@@ -18,6 +18,12 @@ namespace RimDev.ApplicationInsights.Filters.Processors
 
         public IgnoreHangfireTelemetry(
             ITelemetryProcessor next,
+            IgnoreHangfireTelemetryOptions options)
+            : this(next, options.SqlConnectionString, options.HangfireDashboardPath)
+        { }
+
+        public IgnoreHangfireTelemetry(
+            ITelemetryProcessor next,
             string sqlConnectionString = null,
             string hangfireDashboardPath = "/hangfire")
         {
