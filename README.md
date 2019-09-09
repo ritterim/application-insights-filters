@@ -27,7 +27,7 @@ namespace WebApplication
             telemetryProcessorChainBuilder
                 .Use(next => new IgnoreHangfireTelemetry(next,
                     ConfigurationManager.ConnectionStrings["Hangfire"]?.ConnectionString))
-                .Use(next => new IgnorePathsTelemetry(next, "/_health"))
+                .Use(next => new IgnorePathsTelemetry(next, "/_admin"))
                 .Use(next => new RemoveHttpUrlPasswordsTelemetry(next))
                 .Build();
         }
