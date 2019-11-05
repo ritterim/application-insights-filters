@@ -25,7 +25,7 @@ namespace RimDev.ApplicationInsights.Filters.Processors
         {
             var request = item as RequestTelemetry;
 
-            if (request != null && paths.Any(x => x == request.Url.AbsolutePath))
+            if (request != null && paths.Any(x => x == request.Url?.AbsolutePath))
             {
                 return;
             }
