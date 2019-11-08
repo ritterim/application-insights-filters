@@ -34,6 +34,11 @@ namespace RimDev.ApplicationInsights.Filters.Processors
 
         private static string RemovePasswordFromUrl(string url)
         {
+            if (url == null)
+            {
+                return null;
+            }
+
             var match = removePasswordRegex.Match(url).Groups["password"];
 
             if (match.Success)

@@ -58,5 +58,22 @@ namespace RimDev.ApplicationInsights.Filters.Tests.Processors
 
             Assert.Equal("https://example.com", item.Data);
         }
+
+        [Fact]
+        public void DoesNotThrowForNullItems()
+        {
+            var item = new DependencyTelemetry
+            {
+#pragma warning disable CS0618 // Type or member is obsolete
+                CommandName = null,
+#pragma warning restore CS0618 // Type or member is obsolete
+                Data = null,
+                Type = "Http"
+            };
+
+            sut.Process(item);
+
+            Assert.Null(item.Data);
+        }
     }
 }
