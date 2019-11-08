@@ -45,6 +45,19 @@ namespace RimDev.ApplicationInsights.Filters.Tests.Processors
         }
 
         [Fact]
+        public void DoesNotThrowForNullHangfireDashboardUrl()
+        {
+            var item = new RequestTelemetry
+            {
+                Url = null
+            };
+
+            sut.Process(item);
+
+            Assert.True(next.ProcessMethodCalled);
+        }
+
+        [Fact]
         public void CallsNextForNonHangfireSql()
         {
             var item = new DependencyTelemetry

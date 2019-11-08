@@ -44,6 +44,7 @@ namespace RimDev.ApplicationInsights.Filters.Processors
             var request = item as RequestTelemetry;
 
             if (request != null
+                && request.Url != null
                 && request.Url.AbsolutePath.StartsWith(hangfireDashboardPath))
             {
                 return;
