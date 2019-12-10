@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -8,6 +8,7 @@
     <Version>1.0.3</Version>
     <PackageProjectUrl>https://github.com/ritterim/application-insights-filters</PackageProjectUrl>
     <PackageTags>rimdev;application;insights;filters;telemetry;itelemetryprocessor</PackageTags>
+    <PackageVersion>1.0.4</PackageVersion>
   </PropertyGroup>
 
   <ItemGroup>

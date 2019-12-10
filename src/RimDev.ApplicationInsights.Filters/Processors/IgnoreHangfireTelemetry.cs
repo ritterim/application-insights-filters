@@ -55,6 +55,7 @@ namespace RimDev.ApplicationInsights.Filters.Processors
                 var sqlBackend = item as DependencyTelemetry;
 
                 if (sqlBackend != null
+                    && sqlBackend.Success == true
                     && sqlBackend.Type == "SQL"
                     && sqlBackend.Target.EndsWith($"| {sqlDatabase}", StringComparison.OrdinalIgnoreCase))
                 {
