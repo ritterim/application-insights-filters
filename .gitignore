@@ -32,6 +32,8 @@ bld/
 [Oo]bj/
 [Ll]og/
 tools/
+build/
+build.cake
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
@@ -356,3 +358,4 @@ MigrationBackup/
 
 # JetBrains Rider
 .idea/
+

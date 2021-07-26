@@ -1,7 +1,7 @@
 image: Visual Studio 2017
 
 cache:
-  - tools -> build.cake
+  - tools -> build.ps1
 
 build_script:
   - ps: ./build.ps1
