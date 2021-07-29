@@ -71,7 +71,7 @@ namespace RimDev.ApplicationInsights.Filters.Tests.Processors
             ITelemetry item = CreateTelemetryItemFromAbsoluteUrl(inputAbsoluteUrl);
             var options = new RedactQueryStringValueTelemetryProcessorOptions
             {
-                Names = names,
+                Keys = names,
             };
             var sut = CreateSut(options);
 
@@ -97,7 +97,7 @@ namespace RimDev.ApplicationInsights.Filters.Tests.Processors
             ITelemetry item = CreateTelemetryItemFromAbsoluteUrl(inputAbsoluteUrl);
             var options = new RedactQueryStringValueTelemetryProcessorOptions
             {
-                Names = names,
+                Keys = names,
                 RedactedValue = "HIDDEN"
             };
             var sut = CreateSut(options);

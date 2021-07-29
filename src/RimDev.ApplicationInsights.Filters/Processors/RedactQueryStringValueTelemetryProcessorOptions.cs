@@ -8,6 +8,6 @@ namespace RimDev.ApplicationInsights.Filters.Processors
         /// <summary>List of QueryString argument names to redact.  Note that in .NET Core,
         /// those argument names are case insensitive. (See <see cref="QueryHelpers.ParseQuery"/>.)
         /// </summary>
-        public string[] Names { get; set; }
+        public string[] Keys { get; set; }
     }
 }

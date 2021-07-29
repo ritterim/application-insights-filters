@@ -41,7 +41,7 @@ namespace RimDev.ApplicationInsights.Filters.Processors
             if (telemetryItem is RequestTelemetry request && request.Url != null)
             {
                 var uri = request.Url;
-                _options.Names = _options.Names ?? Array.Empty<string>();
+                _options.Keys = _options.Keys ?? Array.Empty<string>();
 
                 // https://stackoverflow.com/a/43407008
                 // ParseQuery() uses KeyValueAccumulator() which does case-insensitive keys
@@ -57,7 +57,7 @@ namespace RimDev.ApplicationInsights.Filters.Processors
                 foreach (var arg in queryArguments)
                 {
                     qb.Add(arg.Key,
-                        _options.Names.Contains(arg.Key, StringComparer.OrdinalIgnoreCase)
+                        _options.Keys.Contains(arg.Key, StringComparer.OrdinalIgnoreCase)
                             ? _options.RedactedValue
                             : arg.Value);
                 }
