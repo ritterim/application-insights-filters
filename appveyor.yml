@@ -13,6 +13,7 @@ skip_tags: true
 artifacts:
   - path: ./msbuild.log
   - path: ./artifacts/*.nupkg
+  - path: ./artifacts/*.snupkg
 
 deploy:
   - provider: Environment
