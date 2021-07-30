@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.WebUtilities;
+
 namespace RimDev.ApplicationInsights.Filters.Processors
 {
     public class RedactQueryStringValueTelemetryProcessorOptions

@@ -2,13 +2,20 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Description>Filters for Microsoft Application Insights ASP.NET and ASP.NET Core applications.</Description>
+
+    <Description>Filters to suppress or redact information being logged into Microsoft Application Insights for ASP.NET and ASP.NET Core applications.</Description>
     <Authors>Ritter Insurance Marketing</Authors>
-    <Copyright>Copyright 2019 Ritter Insurance Marketing</Copyright>
+    <Copyright>Copyright 2019-2021 Ritter Insurance Marketing</Copyright>
+
     <PackageId>RimDev.ApplicationInsights.Filters</PackageId>
-    <Version>1.0.4</Version>
     <PackageProjectUrl>https://github.com/ritterim/application-insights-filters</PackageProjectUrl>
     <PackageTags>rimdev;application;insights;filters;telemetry;itelemetryprocessor</PackageTags>
+
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>
