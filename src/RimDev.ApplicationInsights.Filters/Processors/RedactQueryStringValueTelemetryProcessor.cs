@@ -38,41 +38,43 @@ namespace RimDev.ApplicationInsights.Filters.Processors
 
         internal void RedactTelemetryItem(ITelemetry telemetryItem)
         {
-            if (telemetryItem is RequestTelemetry request && request.Url != null)
+            var request = telemetryItem as RequestTelemetry;
+            if (request?.Url is null) return;
+            if (!request.Url.IsAbsoluteUri) return;
+            if (request.Url.IsAbsoluteUri && string.IsNullOrEmpty(request.Url.Query)) return;
+
+            var uri = request.Url;
+            _options.Keys = _options.Keys ?? Array.Empty<string>();
+
+            // https://stackoverflow.com/a/43407008
+            // ParseQuery() uses KeyValueAccumulator() which does case-insensitive keys
+            var query = QueryHelpers.ParseQuery(uri.Query);
+
+            // convert to KeyValuePair, and order on the Key (makes output more predictable)
+            var queryArguments = query.SelectMany(x => x.Value, (col, value) =>
+                new KeyValuePair<string, string>(col.Key, value))
+                .OrderBy(x => x.Key)
+                .ToList();
+
+            var qb = new QueryBuilder();
+            foreach (var arg in queryArguments)
             {
-                var uri = request.Url;
-                _options.Keys = _options.Keys ?? Array.Empty<string>();
-
-                // https://stackoverflow.com/a/43407008
-                // ParseQuery() uses KeyValueAccumulator() which does case-insensitive keys
-                var query = QueryHelpers.ParseQuery(uri.Query);
-
-                // convert to KeyValuePair, and order on the Key (makes output more predictable)
-                var queryArguments = query.SelectMany(x => x.Value, (col, value) =>
-                    new KeyValuePair<string, string>(col.Key, value))
-                    .OrderBy(x => x.Key)
-                    .ToList();
-
-                var qb = new QueryBuilder();
-                foreach (var arg in queryArguments)
-                {
-                    qb.Add(arg.Key,
-                        _options.Keys.Contains(arg.Key, StringComparer.OrdinalIgnoreCase)
-                            ? _options.RedactedValue
-                            : arg.Value);
-                }
-
-                var resultUri = new UriBuilder
-                {
-                    Scheme = uri.Scheme,
-                    Host = uri.Host,
-                    Port = uri.Port,
-                    Fragment = uri.Fragment,
-                    Path = uri.AbsolutePath,
-                    Query = qb.ToString()
-                };
-                request.Url = resultUri.Uri;
+                qb.Add(arg.Key,
+                    _options.Keys.Contains(arg.Key, StringComparer.OrdinalIgnoreCase)
+                        ? _options.RedactedValue
+                        : arg.Value);
             }
+
+            var resultUri = new UriBuilder
+            {
+                Scheme = uri.Scheme,
+                Host = uri.Host,
+                Port = uri.Port,
+                Fragment = uri.Fragment,
+                Path = uri.AbsolutePath,
+                Query = qb.ToString()
+            };
+            request.Url = resultUri.Uri;
         }
     }
 }
