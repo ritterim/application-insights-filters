@@ -9,5 +9,11 @@ namespace RimDev.ApplicationInsights.Filters.Processors
         /// those argument names are case insensitive. (See <see cref="QueryHelpers.ParseQuery"/>.)
         /// </summary>
         public string[] Keys { get; set; }
+
+        /// <summary>Should RequestTelemetry objects be redacted?</summary>
+        public bool RedactRequestTelemetry { get; set; } = true;
+
+        /// <summary>Should DependencyTelemetry objects be redacted?</summary>
+        public bool RedactDependencyTelemetry { get; set; } = true;
     }
 }

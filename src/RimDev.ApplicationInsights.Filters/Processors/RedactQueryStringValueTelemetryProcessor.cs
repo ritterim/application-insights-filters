@@ -14,6 +14,9 @@ namespace RimDev.ApplicationInsights.Filters.Processors
     /// arguments will change to alphabetical ordering after this
     /// processor works on the QueryString argument collection.
     /// Matching of argument names is case insensitive (see <see cref="QueryHelpers.ParseQuery"/>).
+    /// Operates on <see cref="RequestTelemetry"/> and <see cref="DependencyTelemetry"/>
+    /// unless the related bool properties in <see cref="RedactQueryStringValueTelemetryProcessorOptions"/>
+    /// are set to 'false'.
     /// </summary>
     public class RedactQueryStringValueTelemetryProcessor : ITelemetryProcessor
     {
@@ -32,18 +35,13 @@ namespace RimDev.ApplicationInsights.Filters.Processors
 
         public void Process(ITelemetry item)
         {
-            RedactTelemetryItem(item);
+            if (_options?.RedactDependencyTelemetry == true) RedactDependencyTelemetryItem(item);
+            if (_options?.RedactRequestTelemetry == true) RedactRequestTelemetryItem(item);
             _next.Process(item);
         }
 
-        internal void RedactTelemetryItem(ITelemetry telemetryItem)
+        private Uri RedactUri(Uri uri)
         {
-            var request = telemetryItem as RequestTelemetry;
-            if (request?.Url is null) return;
-            if (!request.Url.IsAbsoluteUri) return;
-            if (request.Url.IsAbsoluteUri && string.IsNullOrEmpty(request.Url.Query)) return;
-
-            var uri = request.Url;
             _options.Keys = _options.Keys ?? Array.Empty<string>();
 
             // https://stackoverflow.com/a/43407008
@@ -52,7 +50,7 @@ namespace RimDev.ApplicationInsights.Filters.Processors
 
             // convert to KeyValuePair, and order on the Key (makes output more predictable)
             var queryArguments = query.SelectMany(x => x.Value, (col, value) =>
-                new KeyValuePair<string, string>(col.Key, value))
+                    new KeyValuePair<string, string>(col.Key, value))
                 .OrderBy(x => x.Key)
                 .ToList();
 
@@ -74,7 +72,36 @@ namespace RimDev.ApplicationInsights.Filters.Processors
                 Path = uri.AbsolutePath,
                 Query = qb.ToString()
             };
-            request.Url = resultUri.Uri;
+
+            return resultUri.Uri;
+        }
+
+        internal void RedactDependencyTelemetryItem(ITelemetry telemetryItem)
+        {
+            var request = telemetryItem as DependencyTelemetry;
+            if (string.IsNullOrEmpty(request?.Data)) return;
+
+            // This one properly treats an absolute path, but relative URI such as
+            // "/something/something/dark?side=true" as "not Absolute"
+            // This is the definition of "!IsAbsolute" that we want.
+            if (!Uri.IsWellFormedUriString(request.Data, UriKind.Absolute)) return;
+
+            // This one converts "/something/something/dark?side=true" into
+            // "file://something/something/dark?side=true" for some reason.
+            // But we still use it because we want to safely create the Uri object.
+            if (!Uri.TryCreate(request.Data, UriKind.Absolute, out var uri)) return;
+
+            request.Data = RedactUri(uri).ToString();
+        }
+
+        internal void RedactRequestTelemetryItem(ITelemetry telemetryItem)
+        {
+            var request = telemetryItem as RequestTelemetry;
+            if (request?.Url is null) return;
+            if (!request.Url.IsAbsoluteUri) return;
+            if (request.Url.IsAbsoluteUri && string.IsNullOrEmpty(request.Url.Query)) return;
+
+            request.Url = RedactUri(request.Url);
         }
     }
 }
