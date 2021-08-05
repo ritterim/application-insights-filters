@@ -1,6 +1,6 @@
 # Application Insights Filters
 
-Filters for Microsoft Application Insights ASP.NET and ASP.NET Core applications.
+Filters to suppress or redact information being recorded into Microsoft Application Insights for ASP.NET and ASP.NET Core applications.
 
 ## Installation
 
@@ -29,6 +29,12 @@ namespace WebApplication
                     ConfigurationManager.ConnectionStrings["Hangfire"]?.ConnectionString))
                 .Use(next => new IgnorePathsTelemetry(next, "/_admin"))
                 .Use(next => new RemoveHttpUrlPasswordsTelemetry(next))
+                .Use(next => new RedactQueryStringValueTelemetryProcessor(next,
+                    new RedactQueryStringValueTelemetryProcessorOptions
+                    {
+                        RedactedValue = "REDACTED",
+                        Keys = new[] {"secret"},
+                    }))
                 .Build();
         }
 
@@ -48,6 +54,13 @@ namespace WebApplication
             services.AddApplicationInsightsTelemetryProcessor<IgnoreHangfireTelemetry>();
             services.AddApplicationInsightsTelemetryProcessor<IgnorePathsTelemetry>();
             services.AddApplicationInsightsTelemetryProcessor<RemoveHttpUrlPasswordsTelemetry>();
+
+            services.AddSingleton(new RedactQueryStringValueTelemetryProcessorOptions
+            {
+                RedactedValue = "REDACTED",
+                Keys = new[] {"secret"},
+            });
+            services.AddApplicationInsightsTelemetryProcessor<RedactQueryStringValueTelemetryProcessor>();
         }
     }
 }
@@ -56,5 +69,3 @@ namespace WebApplication
 ## License
 
 MIT License
-
-[NuGet link]: https://www.nuget.org/packages/RimDev.ApplicationInsights.Filters
